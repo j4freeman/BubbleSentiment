@@ -13,3 +13,4 @@ vaderSentiment==2.5
 theano==1.0.1
 --allow-external MySQL-Connector-Python
 mysql-connector-python==8.0.6
+requests==2.13.0
