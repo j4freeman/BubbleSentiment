@@ -1,16 +1,11 @@
 from __future__ import print_function, division
 import sys
 
-from os.path import abspath, dirname
-sys.path.insert(0, dirname(dirname(abspath(__file__))))
-
 import json
 import numpy as np
-from deepmoji.sentence_tokenizer import SentenceTokenizer
-from deepmoji.model_def import deepmoji_emojis
-from deepmoji.global_variables import PRETRAINED_PATH, VOCAB_PATH
-
-OUTPUT_PATH = 'test_sentences.csv'
+from DM.deepmoji.sentence_tokenizer import SentenceTokenizer
+from DM.deepmoji.model_def import deepmoji_emojis
+from DM.deepmoji.global_variables import PRETRAINED_PATH, VOCAB_PATH
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 analyzer = SentimentIntensityAnalyzer()
@@ -132,18 +127,18 @@ for i, t in enumerate(TEST_SENTENCES):
     out_int = convert_vals(output[i][2:])
     output[i].append(out_int)
 
-    # try:
-    #     print(output[i])
-    #     decode_int(output[i][-1])
-    # except Exception as e:
-    #     print("Exception at row {}!".format(i))
-    #     print(str(e))
+    try:
+        print(output[i])
+        decode_int(output[i][-1])
+    except Exception as e:
+        print("Exception at row {}!".format(i))
+        print(str(e))
 
 
-for i in output:
-    query = "UPDATE Sentiment_demo SET content_type = %s WHERE id = %s;"
-    cursor.execute(query, (i[-1], i[0]))
-
-cnx.commit()
+# for i in output:
+#     query = "UPDATE Sentiment_demo SET content_type = %s WHERE id = %s;"
+#     cursor.execute(query, (i[-1], i[0]))
+#
+# cnx.commit()
 cursor.close()
 cnx.close()
