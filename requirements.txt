@@ -12,4 +12,4 @@ text-unidecode==1.0
 vaderSentiment==2.5
 theano==1.0.1
 --allow-external MySQL-Connector-Python
-mysql-connector-python==2.1.7
+mysql-connector-python==8.0.6
