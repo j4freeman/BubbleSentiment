@@ -10,7 +10,7 @@ from DM.deepmoji.global_variables import PRETRAINED_PATH, VOCAB_PATH
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 analyzer = SentimentIntensityAnalyzer()
 
-import mysql.connector as sql
+import requests
 
 def discretize_sent(snt):
     if snt == 0.0:
@@ -80,17 +80,18 @@ def decode_int(val):
     print("{}: The analyzed bit is: {}, the type is: {}, the number of emoji is: {}, the first emoji is: {}, the second emoji is: {}, the third emoji is: {}, the sentiment is: {}".format(str(val), analyzed, type, num, e1, e2, e3, translate_sentiment(snt)))
 
 
-cnx = sql.connect(host='mysql.eecs.ku.edu', user='dfernand', password='BubbleUp582', database='dfernand')
-cursor = cnx.cursor()
+mydict = {
+    "Content-Type": "application/json",
+    "Authorization": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NH0.nc4RJ7Ni-ALRyz2LGXuUq8Eofi_hZlxF6CBBt_ziRGw"
+}
 
-query = ("SELECT id, body, content_type FROM Posts WHERE content_type < 536870912;")
+r = requests.get('http://bubbleup-api.herokuapp.com/posts', headers=mydict)
 
-cursor.execute(query)
+if not r:
+    sys.exit()
 
-output = []
-
-for row in cursor:
-  output.append(list(row))
+output = r.json()
+output = [[x[u'id'], x[u'body'], x[u'content_type']] for x in output if x[u'content_type'] < 536870912]
 
 if not output:
     sys.exit()
@@ -128,17 +129,17 @@ for i, t in enumerate(TEST_SENTENCES):
     output[i].append(out_int)
 
     try:
+        print("=============")
         print(output[i])
         decode_int(output[i][-1])
+        print('http://bubbleup-api.herokuapp.com/posts/' + str(output[i][0]))
+        print("=============")
     except Exception as e:
         print("Exception at row {}!".format(i))
         print(str(e))
 
-
 # for i in output:
-#     query = "UPDATE Sentiment_demo SET content_type = %s WHERE id = %s;"
-#     cursor.execute(query, (i[-1], i[0]))
-#
-# cnx.commit()
-cursor.close()
-cnx.close()
+#     url = 'http://bubbleup-api.herokuapp.com/posts/' + i[0]
+#     r = requests.put(url, headers=mydict, json={u'content_type': i[-1]})
+#     if not r:
+#         print("failed to post for id: ", str(i[0]))
