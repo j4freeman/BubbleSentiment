@@ -12,3 +12,4 @@ text-unidecode==1.0
 vaderSentiment==2.5
 theano==1.0.1
 requests==2.13.0
+flask==0.11.1
