@@ -1,5 +1,5 @@
 from os import environ
 from flask import Flask
 
-app = Flask(sentiment.py)
+app = Flask(__name__)
 app.run(environ.get('PORT'))

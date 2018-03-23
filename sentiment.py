@@ -8,7 +8,6 @@ from DM.deepmoji.model_def import deepmoji_emojis
 from DM.deepmoji.global_variables import PRETRAINED_PATH, VOCAB_PATH
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-analyzer = SentimentIntensityAnalyzer()
 
 import requests
 
@@ -79,6 +78,7 @@ def decode_int(val):
         e1 = -1
     print("{}: The analyzed bit is: {}, the type is: {}, the number of emoji is: {}, the first emoji is: {}, the second emoji is: {}, the third emoji is: {}, the sentiment is: {}".format(str(val), analyzed, type, num, e1, e2, e3, translate_sentiment(snt)))
 
+analyzer = SentimentIntensityAnalyzer()
 
 mydict = {
     "Content-Type": "application/json",
