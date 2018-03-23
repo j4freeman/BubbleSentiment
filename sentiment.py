@@ -137,6 +137,7 @@ for i, t in enumerate(TEST_SENTENCES):
     except Exception as e:
         print("Exception at row {}!".format(i))
         print(str(e))
+    sys.stdout.flush()
 
 # for i in output:
 #     url = 'http://bubbleup-api.herokuapp.com/posts/' + i[0]
