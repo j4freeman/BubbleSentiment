@@ -11,6 +11,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import requests
 
+print("sentiment running")
+
 def discretize_sent(snt):
     if snt == 0.0:
         return 3
