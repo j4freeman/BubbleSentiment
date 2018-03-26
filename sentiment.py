@@ -179,4 +179,5 @@ def test_func(body, content):
         output[i].append(snt['compound'])
         out_int = convert_vals(output[i][1:])
         output[i].append(out_int)
+        print("============= ", out_int, " ==================")
         return out_int
