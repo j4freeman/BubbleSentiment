@@ -1,5 +1,5 @@
 from os import environ
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import sentiment
 
 app = Flask(__name__)
