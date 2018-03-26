@@ -9,7 +9,7 @@ def process():
     j = request.json
     c = j['content_type']
     b = j['body']
-    return sentiment.test_func(b, c)
+    return jsonify({'content_type': sentiment.test_func(b, c)})
 
 if __name__ == '__main__':
     port = int(environ.get('PORT', 5000))
