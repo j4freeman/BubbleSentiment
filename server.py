@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=['POST'])
 def process():
-    j = request.data
+    j = request.args
     c = j['content_type']
     b = j['body']
     return jsonify({'content_type': sentiment.test_func(b, c)})
