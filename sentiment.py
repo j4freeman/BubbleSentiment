@@ -142,9 +142,10 @@ for i, t in enumerate(TEST_SENTENCES):
     # sys.stdout.flush()
 
 for i in output:
-    url = 'http://bubbleup-api.herokuapp.com/posts/' + i[0]
+    url = 'http://bubbleup-api.herokuapp.com/posts/' + str(i[0])
     r = requests.put(url, headers=mydict, json={u'content_type': i[-1]})
+    # print(url, i[-1])
     if not r:
         print("failed to post for id: ", str(i[0]))
 
-print "execution complete"
+print("execution complete")
