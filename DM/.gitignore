@@ -98,8 +98,5 @@ ENV/
 # nosetests
 .noseids
 
-# DeepMoji weights
-*.hdf5
-
 # local Keras
 keras/

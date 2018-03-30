@@ -1,15 +1,8 @@
 from os import environ
-from flask import Flask, jsonify, request
-import sentiment
+from flask import Flask
 
 app = Flask(__name__)
-
-@app.route("/", methods=['POST'])
-def process():
-    j = request.args
-    c = int(j['content_type'])
-    b = j['body']
-    return jsonify({'content_type': sentiment.test_func(b, c)})
+# app.run(environ.get('PORT'))
 
 if __name__ == '__main__':
     port = int(environ.get('PORT', 5000))

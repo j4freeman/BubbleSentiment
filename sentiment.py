@@ -11,6 +11,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import requests
 
+print("sentiment running")
+
 def discretize_sent(snt):
     if snt == 0.0:
         return 3
@@ -78,106 +80,71 @@ def decode_int(val):
         e1 = -1
     print("{}: The analyzed bit is: {}, the type is: {}, the number of emoji is: {}, the first emoji is: {}, the second emoji is: {}, the third emoji is: {}, the sentiment is: {}".format(str(val), analyzed, type, num, e1, e2, e3, translate_sentiment(snt)))
 
-# analyzer = SentimentIntensityAnalyzer()
-#
-# mydict = {
-#     "Content-Type": "application/json",
-#     "Authorization": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NH0.nc4RJ7Ni-ALRyz2LGXuUq8Eofi_hZlxF6CBBt_ziRGw"
-# }
-#
-# r = requests.get('http://bubbleup-api.herokuapp.com/posts', headers=mydict)
-#
-# if not r:
-#     sys.exit()
-#
-# output = r.json()
-# output = [[x[u'id'], x[u'body'], x[u'content_type']] for x in output if x[u'content_type'] < 536870912]
-#
-# if not output:
-#     sys.exit()
-#
-# TEST_SENTENCES = [x[1] for x in output]
-#
-# def top_elements(array, k):
-#     ind = np.argpartition(array, -k)[-k:]
-#     return ind[np.argsort(array[ind])][::-1]
-#
-# maxlen = 60
-# batch_size = 8
-#
-# with open(VOCAB_PATH, 'r') as f:
-#     vocabulary = json.load(f)
-# st = SentenceTokenizer(vocabulary, maxlen)
-# tokenized, _, _ = st.tokenize_sentences(TEST_SENTENCES)
-#
-# model = deepmoji_emojis(maxlen, PRETRAINED_PATH)
-#
-# prob = model.predict(tokenized)
-#
-# for i, t in enumerate(TEST_SENTENCES):
-#     t_tokens = tokenized[i]
-#     t_score = [t]
-#     t_prob = prob[i]
-#     ind_top = top_elements(t_prob, 3)
-#     ind_top = [x if t_prob[x] >= 0.1 else -1 for x in ind_top]
-#     output[i].extend(ind_top)
-#     output[i].append(sum(x > -1 for x in ind_top))
-#
-#     snt = analyzer.polarity_scores(output[i][1])
-#     output[i].append(snt['compound'])
-#     out_int = convert_vals(output[i][2:])
-#     output[i].append(out_int)
-#
-#     try:
-#         print("=============")
-#         print(output[i])
-#         decode_int(output[i][-1])
-#         print('http://bubbleup-api.herokuapp.com/posts/' + str(output[i][0]))
-#         print("=============")
-#     except Exception as e:
-#         print("Exception at row {}!".format(i))
-#         print(str(e))
-#     sys.stdout.flush()
+analyzer = SentimentIntensityAnalyzer()
 
-# for i in output:
-#     url = 'http://bubbleup-api.herokuapp.com/posts/' + i[0]
-#     r = requests.put(url, headers=mydict, json={u'content_type': i[-1]})
-#     if not r:
-#         print("failed to post for id: ", str(i[0]))
+mydict = {
+    "Content-Type": "application/json",
+    "Authorization": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NH0.nc4RJ7Ni-ALRyz2LGXuUq8Eofi_hZlxF6CBBt_ziRGw"
+}
 
-def test_func(body, content):
-    analyzer = SentimentIntensityAnalyzer()
+r = requests.get('http://bubbleup-api.herokuapp.com/posts', headers=mydict)
 
-    output = [[body, content]]
+if not r:
+    sys.exit()
 
-    TEST_SENTENCES = [body]
+output = r.json()
+output = [[x[u'id'], x[u'body'], x[u'content_type']] for x in output if x[u'content_type'] < 536870912]
 
-    def top_elements(array, k):
-        ind = np.argpartition(array, -k)[-k:]
-        return ind[np.argsort(array[ind])][::-1]
+if not output:
+    sys.exit()
 
-    maxlen = 60
-    batch_size = 1
+TEST_SENTENCES = [x[1] for x in output]
 
-    with open(VOCAB_PATH, 'r') as f:
-        vocabulary = json.load(f)
-    st = SentenceTokenizer(vocabulary, maxlen)
-    tokenized, _, _ = st.tokenize_sentences(TEST_SENTENCES)
+def top_elements(array, k):
+    ind = np.argpartition(array, -k)[-k:]
+    return ind[np.argsort(array[ind])][::-1]
 
-    model = deepmoji_emojis(maxlen, PRETRAINED_PATH)
+maxlen = 60
+batch_size = 8
 
-    prob = model.predict(tokenized)
+with open(VOCAB_PATH, 'r') as f:
+    vocabulary = json.load(f)
+st = SentenceTokenizer(vocabulary, maxlen)
+tokenized, _, _ = st.tokenize_sentences(TEST_SENTENCES)
 
-    for i, t in enumerate(TEST_SENTENCES):
-        t_prob = prob[i]
-        ind_top = top_elements(t_prob, 3)
-        ind_top = [x if t_prob[x] >= 0.1 else -1 for x in ind_top]
-        output[i].extend(ind_top)
-        output[i].append(sum(x > -1 for x in ind_top))
+model = deepmoji_emojis(maxlen, PRETRAINED_PATH)
 
-        snt = analyzer.polarity_scores(output[i][0])
-        output[i].append(snt['compound'])
-        out_int = convert_vals(output[i][1:])
-        output[i].append(out_int)
-        print("============= ", out_int, " ==================")
-        return out_int
+prob = model.predict(tokenized)
+
+for i, t in enumerate(TEST_SENTENCES):
+    t_tokens = tokenized[i]
+    t_score = [t]
+    t_prob = prob[i]
+    ind_top = top_elements(t_prob, 3)
+    ind_top = [x if t_prob[x] >= 0.1 else -1 for x in ind_top]
+    output[i].extend(ind_top)
+    output[i].append(sum(x > -1 for x in ind_top))
+
+    snt = analyzer.polarity_scores(output[i][1])
+    output[i].append(snt['compound'])
+    out_int = convert_vals(output[i][2:])
+    output[i].append(out_int)
+
+    # try:
+    #     print("=============")
+    #     print(output[i])
+    #     decode_int(output[i][-1])
+    #     print('http://bubbleup-api.herokuapp.com/posts/' + str(output[i][0]))
+    #     print("=============")
+    # except Exception as e:
+    #     print("Exception at row {}!".format(i))
+    #     print(str(e))
+    # sys.stdout.flush()
+
+for i in output:
+    url = 'http://bubbleup-api.herokuapp.com/posts/' + i[0]
+    r = requests.put(url, headers=mydict, json={u'content_type': i[-1]})
+    if not r:
+        print("failed to post for id: ", str(i[0]))
+
+print "execution complete"
